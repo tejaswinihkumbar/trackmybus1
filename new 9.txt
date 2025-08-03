@@ -1,0 +1,18 @@
+ select name from stops s 
+ join trips t 
+ on s.bus_id = t.bus_id 
+ where t.bus_id =1 and t.status like 'started' and s.stop_order = 1;
+ 
+ 
+ 
+ SELECT name, latitude, longitude FROM stops WHERE route_id = ? ORDER BY id DESC LIMIT 1
+ 
+ 
+ SELECT s.name, s.latitude, s.longitude FROM stops s
+ JOIN trips t ON s.bus_id = t.bus_id
+ WHERE t.bus_id = ? 
+ AND s.route_id = ? 
+ AND t.status LIKE 'started' 
+ AND s.stop_order = 1
+ 
+ 

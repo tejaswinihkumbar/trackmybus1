@@ -1,0 +1,26 @@
+dbconfig.php 
+
+# Ignore sensitive config files
+dbconfig.php
+
+# Ignore system and temporary files
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Ignore IDE/editor-specific folders (like VS Code settings)
+.vscode/
+.idea/
+
+# Ignore XAMPP or other environment-specific folders (optional)
+htdocs/
+
+# Ignore any backup or compiled files
+*.bak
+*.swp
+*.class
+*.exe
+
+# Ignore hidden folders or files you don't want to push
+.env

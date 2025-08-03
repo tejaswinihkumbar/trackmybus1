@@ -1,0 +1,240 @@
+
+ mysql -u root -p
+ 
+ show databases;
+  
+ create database trackmybus;
+
+ use trackmybus;
+   
+ 1)CREATE TABLE admin (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    password VARCHAR(255)
+   );
+
+
+
+ 2) CREATE TABLE routes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100)
+   );
+
+ 3) CREATE TABLE users (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    phone_number VARCHAR(20) NOT NULL,
+    email VARCHAR(256) NOT NULL,
+    password VARCHAR(64) NOT NULL,
+    first_name VARCHAR(25) NOT NULL,
+    last_name VARCHAR(25) NOT NULL,
+    preferred_stop_id INT ,
+    route_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_users PRIMARY KEY (id),
+    CONSTRAINT uq_users_email UNIQUE (email),
+    CONSTRAINT uq_users_phone_number UNIQUE (phone_number),
+   -- CONSTRAINT fk_route_id FOREIGN KEY(route_id)REFERENCES ROUTES(ID)
+   -- CONSTRAINT fk_preferred_stop_id FOREIGN KEY(preferred_stop_id)REFERENCES STOPS(ID)
+   );
+
+ 4) CREATE TABLE buses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    vehicle_number VARCHAR(20) UNIQUE,
+    route_id INT,
+    FOREIGN KEY (route_id) REFERENCES routes(id)
+   );
+
+ 5) CREATE TABLE drivers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100),
+    password VARCHAR(255),
+    phone VARCHAR(15),
+    assigned_bus_id INT,
+    FOREIGN KEY (assigned_bus_id) REFERENCES buses(id)
+   );
+
+
+ 6) CREATE TABLE stops (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    route_id INT,
+    stop_order INT,
+    FOREIGN KEY (route_id) REFERENCES routes(id)
+   );
+
+ 7) CREATE TABLE location_updates (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    bus_id INT,
+    stop_id INT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('ARRIVED', 'DELAYED', 'ON_ROUTE'),
+    FOREIGN KEY (bus_id) REFERENCES buses(id),
+    FOREIGN KEY (stop_id) REFERENCES stops(id)
+   );
+
+ 8) CREATE TABLE feedback (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT,
+    message TEXT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES students(id)
+   );
+
+ 9) CREATE TABLE roles (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    name VARCHAR(45) NOT NULL,
+    CONSTRAINT pk_roles PRIMARY KEY (id),
+    CONSTRAINT uq_roles_name UNIQUE (name)
+   );
+
+ 10) CREATE TABLE users_roles (
+     student_id BIGINT UNSIGNED NOT NULL,
+     role_id BIGINT UNSIGNED NOT NULL,
+     CONSTRAINT pk_users_roles PRIMARY KEY (student_id, role_id),
+     CONSTRAINT fk_users_roles_user FOREIGN KEY (student_id) REFERENCES users(id),
+     CONSTRAINT fk_users_roles_role FOREIGN KEY (role_id) REFERENCES roles(id)
+    );
+	
+ 11) CREATE TABLE route_stops (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    route_id INT NOT NULL,
+    stop_id INT NOT NULL,
+    FOREIGN KEY (route_id) REFERENCES routes(id) ON DELETE CASCADE,
+    FOREIGN KEY (stop_id) REFERENCES stops(id) ON DELETE CASCADE
+);
+
+  12) CREATE TABLE bus_assignments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    driver_id BIGINT UNSIGNED NOT NULL,
+    bus_id INT NOT NULL,
+    assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (driver_id) REFERENCES users(id),
+    FOREIGN KEY (bus_id) REFERENCES buses(id),
+    UNIQUE (driver_id),
+    UNIQUE (bus_id)
+);
+
+ 13) create table contact_us(
+	id bigint unsigned not null auto_increment,
+	contact_us_users_id bigint unsigned not null,
+	full_name varchar(150) not null,
+	email varchar(256) not null,
+	message text not null,
+	constraint pk_contact_us primary key(id),
+	constraint fk_contact_us_users_id foreign key(contact_us_users_id) references users(id)
+	);
+	
+ ALTER TABLE drivers ADD COLUMN trip_status VARCHAR(20);
+ 
+ ALTER TABLE drivers ADD COLUMN trip_time DATETIME;
+	
+ ALTER TABLE users ADD COLUMN bus_id INT, ADD FOREIGN KEY (bus_id) REFERENCES buses(id);
+ 
+ ALTER TABLE stops 
+ ADD COLUMN latitude DECIMAL(10, 8),
+ ADD COLUMN longitude DECIMAL(11, 8);
+ 
+ ALTER TABLE drivers MODIFY user_id BIGINT(20) UNSIGNED;
+ 
+ ALTER TABLE drivers ADD CONSTRAINT fk_driver_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+
+ UPDATE stops SET latitude = 15.3645, longitude = 75.1240 WHERE name = 'IBMR College';
+ 
+ UPDATE stops SET latitude = 15.3655, longitude = 75.1270 WHERE name = 'Sidheshwar Park';
+ 
+ UPDATE stops SET latitude = 15.3675, longitude = 75.1290 WHERE name = 'Shirur Park';
+ 
+ UPDATE stops SET latitude = 15.3680, longitude = 75.1305 WHERE name = 'Vidhyanagar';
+ 
+ UPDATE stops SET latitude = 15.3695, longitude = 75.1320 WHERE name = 'KIMS';
+ 
+ UPDATE stops SET latitude = 15.3710, longitude = 75.1335 WHERE name = 'Hosur Bus Stand';
+ 
+ UPDATE stops SET latitude = 15.3730, longitude = 75.1350 WHERE name = 'Hosur Cross';
+ 
+ UPDATE stops SET latitude = 15.3745, longitude = 75.1365 WHERE name = 'OBS';
+ 
+ INSERT INTO roles (name) VALUES ('USER');
+
+ INSERT INTO roles (name) VALUES ('ADMIN');
+
+ INSERT INTO roles (name) VALUES ('DRIVER');
+ 
+ INSERT INTO buses VALUES ('1','KA-01 AB-1234','7');
+
+ update users_roles set role_id=2 where user_id=1;
+ 
+  insert into routes(name) values ('Old Bus Stand');
+  
+   insert into stops values (1,'IBMR College','7','0','1');
+   
+   insert into stops values (2,'Sidheshwar Park','7','1','1');
+   
+   insert into stops values (3,'Shirur Park','7','2','1');
+   
+   insert into stops values (4,'Vidhyanagar','7','3','1');
+   
+   insert into stops values (5,'KIMS','7','4','1');
+   
+   insert into stops values (6,'Hosur Bus Stand','7','5','1');
+   
+   insert into stops values (7,'Hosur Cross','7','6','1');
+   
+   insert into stops values (8,'OBS','7','7','1');
+ 
+ 
+
+
+
+ CREATE TABLE students (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    college_id VARCHAR(50) UNIQUE,
+    email VARCHAR(100),
+    password VARCHAR(255),
+    phone VARCHAR(15),
+    preferred_stop_id INT,
+    route_id INT,
+    FOREIGN KEY (preferred_stop_id) REFERENCES stops(id),
+    FOREIGN KEY (route_id) REFERENCES routes(id)
+ );
+	
+	
+	
+adminDashboard.php
+	
+	<?php
+$pageTitle = "Admin Dashboard | Track My Bus";
+include 'header.php';
+
+if (!isset($_SESSION['roles']) || !in_array('ADMIN', $_SESSION['roles'])) {
+    header("Location: login.php");
+    exit();
+}
+?>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Welcome to Admin Dashboard</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card p-3 shadow-sm">
+                <h5>User Management</h5>
+                <p>Assign bus to a registered users.</p>
+                <a href="admin_assign_bus.php" class="btn btn-warning">Manage Users</a>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card p-3 shadow-sm">
+                <h5>System Reports</h5>
+                <p>Generate system usage reports and analytics.</p>
+                <a href="reports.php" class="btn btn-secondary">View Reports</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php include 'footer.php'; ?>
